@@ -18,6 +18,4 @@ export default function Header(props) {
       <hr className="appointment__separator" />
     </header>
   );
-
-
 }
