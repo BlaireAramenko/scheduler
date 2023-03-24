@@ -8,6 +8,9 @@ import DayListItem from "components/DayListItem";
 import DayList from "components/DayList";
 import InterviewerListItem from "components/InterviewerListItem";
 import InterviewerList from "components/InterviewerList";
+import Appointment from "components/Appointment/index";
+import Header from "components/Appointment/Header";
+import Empty from "components/Appointment/Empty";
 
 storiesOf("Button", module)
   .addParameters({
@@ -132,3 +135,13 @@ storiesOf("InterviewerListItem", module)
         onChange={action("setInterviewer")}
       />
     ));
+
+    storiesOf("Appointment", module)
+  .addParameters({
+    backgrounds: [{ name: "white", value: "#fff", default: true }]
+  })
+  .add("Appointment", () => <Appointment />)
+  //Add a second story to the <Appointment> that passes the <Appointment> component a time prop that is a string. Set the time prop to "12pm". See answer below.
+  .add("Appointment with Time", () => <Appointment time="12pm" />)
+  .add("Header", () => <Header time="12pm" />)
+  .add("Empty", () => <Empty onAdd={action("onAdd")}/>)
