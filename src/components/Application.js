@@ -1,7 +1,9 @@
 import "components/Application.scss";
 import DayList from "./DayList";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Appointment from "./Appointment";
+import axios from "axios";
+
 
 const appointments = {
   "1": {
@@ -43,26 +45,25 @@ const appointments = {
 };
 
 
-const days = [
-  {
-    id: 1,
-    name: "Monday",
-    spots: 2,
-  },
-  {
-    id: 2,
-    name: "Tuesday",
-    spots: 5,
-  },
-  {
-    id: 3,
-    name: "Wednesday",
-    spots: 0,
-  },
-];
 
 export default function Application(props) {
   const [day, setDay] = useState("Monday");
+  const [days, setDays] = useState([]);
+
+  useEffect(() => {
+    //make get request to the /api/days endpoint using axios
+    axios
+      .get("/api/days")
+      //if the request is success, update the state with the response data
+      .then((response) => {
+        setDays(response.data);
+      })
+      //if there's an error, log it to the console
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []); //run this hook only once after the component mounts 
+
   return (
     <main className="layout">
       <section className="sidebar">
