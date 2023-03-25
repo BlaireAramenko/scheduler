@@ -3,32 +3,35 @@ import DayList from "./DayList";
 import React, { useState, useEffect } from "react";
 import Appointment from "./Appointment";
 import axios from "axios";
+import { getAppointmentsForDay } from "../helpers/selectors";
 
 
 export default function Application(props) {
   const setDay = day => setState({ ...state, day });
-  const setDays = (days) => setState(prev => ({ ...prev, days }));
   const [state, setState] = useState({
     day: "Monday",
     days: [],
     appointments: {}
   });
-  const dailyAppointments = [];
 
   useEffect(() => {
-    //make get request to the /api/days endpoint using axios
-    axios
-      .get("/api/days")
-      //if the request is success, update the state with the response data
-      .then((response) => {
-        setDays(response.data);
-        console.log(response.data);
-      })
+    Promise.all([
+      axios.get("/api/days"),
+      axios.get("/api/appointments")
+    ])
+      .then((all) => {
+        console.log(all[0].data); //days data
+        console.log(all[1].data); //appointments data
+        setState(prevState => ({ ...prevState, days: all[0].data, appointments: all[1].data }));
+     })
       //if there's an error, log it to the console
       .catch((error) => {
         console.log(error);
       });
   }, []); //run this hook only once after the component mounts 
+
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+
 
   return (
     <main className="layout">
