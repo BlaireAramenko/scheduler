@@ -1,31 +1,52 @@
 import React from "react";
 import "components/Appointment/styles.scss";
-import classNames from "classnames";
 import Empty from "./Empty";
 import Header from "./Header";
 import Show from "./Show";
+import useVisualMode from "../../hooks/useVisualMode";
+import Form from "./Form";
 
-/* export default function Appointment(props) {
-  return (
-    <article className="appointment"></article>
-  );
-} */
+
 
 export default function Appointment(props) {
+  //define the different modes for the appointment component
+  const EMPTY = "EMPTY";
+  const SHOW = "SHOW";
+  const CREATE = "CREATE";
+
+  //using the useVisualMode custom hook to manage the component state and transitions between different modes
+  const { mode, transition, back } = useVisualMode(
+    props.interview ? SHOW : EMPTY
+  );
+
+  //this function saves interview data, updates mode state and transitions to SHOW or back to CREATE mode
+  const save = (student, interviewer) => {
+    props.onSave(student, interviewer);
+    if (props.interview) {
+    transition(SHOW);
+  } else {
+    back();
+  }
+}
+
+
   //render the entire appointment article element
   return (
     <article className="appointment">
       <Header time={props.time} />
-      {/*using a ternary operator to conditionally render a Show or Empty component based on the truthiness of props.interview */}
-      {props.interview ? (
-        //if props.interview is truthy, render the Show component with the appropriate props
-        <Show
-          student={props.interview.student}
-          interviewer={props.interview.interviewer}
-        />
-      ) : (
-        //if props.interview is falsy, render the Empty component with the onAdd prop
-        <Empty onAdd={props.onAdd} />
+      {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
+      {mode === SHOW && (
+    <Show
+      student={props.interview.student}
+      interviewer={props.interview.interviewer}
+    />
+    )}
+    {mode === CREATE && (
+      <Form 
+      interviewers={props.interviewers} 
+      onCancel={back} 
+      onSave ={save}
+      />
       )}
     </article>
   );
