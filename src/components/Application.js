@@ -52,6 +52,23 @@ export default function Application(props) {
         });
     }
 
+    //function to cancel an interview
+    function cancelInterview(id){
+      const appointment = {
+        ...state.appointments[id],
+        interview: null,
+      };
+      const appointments = {
+        ...state.appointments,
+        [id]: appointment
+      };
+      return axios
+      .delete(`/api/appointments/${id}`)
+      .then(() => setState({ ...state, appointments }))
+      .catch(err => console.log(err));
+      }
+  
+
     //call the getAppointmentsForDay helper func to retrieve all appts for the currently selected day of the week from the state
   const appointments = getAppointmentsForDay(state, state.day);
   const interviewers = getInterviewersForDay(state, state.day);
@@ -68,6 +85,7 @@ export default function Application(props) {
         interview={interview}
         interviewers={interviewers}
         bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
       />
     );
   });

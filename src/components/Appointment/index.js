@@ -15,6 +15,7 @@ export default function Appointment(props) {
   const SHOW = "SHOW";
   const CREATE = "CREATE";
   const SAVING = "SAVING";
+  const DELETING = "DELETING";
 
   //using the useVisualMode custom hook to manage the component state and transitions between different modes
   const { mode, transition, back } = useVisualMode(
@@ -43,6 +44,13 @@ function save(name, interviewer) {
   transition(SHOW)});
 }
 
+const deleteAppointment = () => {
+  transition(DELETING);
+  Promise.resolve(props.cancelInterview(props.id))
+  .then(() => transition(EMPTY))
+  .catch(err => console.log(err));
+}
+
 
   //render the entire appointment article element
   return (
@@ -51,9 +59,11 @@ function save(name, interviewer) {
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
       {mode === SHOW && (
     <Show
+      id={props.id}
       student={props.interview.student}
       interviewer={props.interview.interviewer}
       interview={props.interview}
+      onDelete={deleteAppointment}
     />
     )}
     {mode === CREATE && (
@@ -67,6 +77,9 @@ function save(name, interviewer) {
       )}
       {mode === SAVING && (
         <Status message="Saving" />
+      )}
+      {mode === DELETING && (
+        <Status message="Deleting" />
       )}
     </article>
   );
