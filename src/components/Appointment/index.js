@@ -5,6 +5,7 @@ import Header from "./Header";
 import Show from "./Show";
 import useVisualMode from "../../hooks/useVisualMode";
 import Form from "./Form";
+import Status from "./Status";
 
 
 
@@ -13,6 +14,7 @@ export default function Appointment(props) {
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE";
+  const SAVING = "SAVING";
 
   //using the useVisualMode custom hook to manage the component state and transitions between different modes
   const { mode, transition, back } = useVisualMode(
@@ -20,13 +22,25 @@ export default function Appointment(props) {
   );
 
   //this function saves interview data, updates mode state and transitions to SHOW or back to CREATE mode
-  const save = (student, interviewer) => {
+ /* const save = (student, interviewer) => {
     props.onSave(student, interviewer);
     if (props.interview) {
     transition(SHOW);
   } else {
     back();
   }
+} */
+function save(name, interviewer) {
+  const interview = {
+    student: name,
+    interviewer
+  };
+  //props.onSave(name, interviewer);
+  transition(SAVING);
+
+  //call the bookInterview function that saves the interview to the database and transition to SHOW mode once it's done
+  props.bookInterview(props.id, interview).then(() => {
+  transition(SHOW)});
 }
 
 
@@ -39,14 +53,20 @@ export default function Appointment(props) {
     <Show
       student={props.interview.student}
       interviewer={props.interview.interviewer}
+      interview={props.interview}
     />
     )}
     {mode === CREATE && (
       <Form 
+      interviewer={props.interviewer}
       interviewers={props.interviewers} 
       onCancel={back} 
-      onSave ={save}
+      onSave={save}
+      bookInterview={props.bookInterview} 
       />
+      )}
+      {mode === SAVING && (
+        <Status message="Saving" />
       )}
     </article>
   );
