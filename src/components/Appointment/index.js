@@ -6,6 +6,7 @@ import Show from "./Show";
 import useVisualMode from "../../hooks/useVisualMode";
 import Form from "./Form";
 import Status from "./Status";
+import Confirm from "./Confirm";
 
 
 
@@ -15,6 +16,7 @@ export default function Appointment(props) {
   const SHOW = "SHOW";
   const CREATE = "CREATE";
   const SAVING = "SAVING";
+  const CONFIRM = "CONFIRM";
   const DELETING = "DELETING";
 
   //using the useVisualMode custom hook to manage the component state and transitions between different modes
@@ -44,6 +46,10 @@ function save(name, interviewer) {
   transition(SHOW)});
 }
 
+const confirmDelete = () => {
+  transition(CONFIRM)
+};
+
 const deleteAppointment = () => {
   transition(DELETING);
   Promise.resolve(props.cancelInterview(props.id))
@@ -63,7 +69,7 @@ const deleteAppointment = () => {
       student={props.interview.student}
       interviewer={props.interview.interviewer}
       interview={props.interview}
-      onDelete={deleteAppointment}
+      onDelete={confirmDelete}
     />
     )}
     {mode === CREATE && (
@@ -77,6 +83,12 @@ const deleteAppointment = () => {
       )}
       {mode === SAVING && (
         <Status message="Saving" />
+      )}
+      {mode === CONFIRM && (
+        <Confirm 
+        onConfirm={deleteAppointment}
+        onCancel={() => back()}
+        />
       )}
       {mode === DELETING && (
         <Status message="Deleting" />
