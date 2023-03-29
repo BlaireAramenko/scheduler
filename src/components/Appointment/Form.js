@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import Button from "components/Button";
 import InterviewerList from "components/InterviewerList";
 import React, { useState } from 'react';
@@ -7,6 +6,7 @@ import React, { useState } from 'react';
 export default function Form(props) {
   const [student, setStudent] = useState(props.student || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
+  const [error, setError] = useState("");
 
   //resets inputs for form values for student and interviewer
   const reset = () => {
@@ -19,12 +19,25 @@ export default function Form(props) {
     props.onCancel();
   };
   //saves form values when user clicks save button
-  const save = () => {
+ /* const save = () => {
     if (student && interviewer && props.onSave) {
       props.onSave(student, interviewer);
       reset();
     }
-  };
+  }; */
+
+  function validate() {
+    if (student === "") {
+      setError("Student name cannot be blank");
+      return;
+    }
+    if (interviewer === null) {
+      setError("Please select an interviewer");
+      return;
+    }  
+    setError("");
+    props.onSave(student, interviewer);
+  }
 
 //renders the form
   return (
@@ -38,7 +51,9 @@ export default function Form(props) {
             placeholder="Enter Student Name"
             value={student}
             onChange={event => setStudent(event.target.value)}
+            data-testid="student-name-input"
           />
+          <section className="appointment__validation">{error}</section>
         </form>
         <InterviewerList
           interviewers={props.interviewers}
@@ -49,7 +64,7 @@ export default function Form(props) {
       <section className="appointment__card-right">
         <section className="appointment__actions">
           <Button danger onClick={cancel}>Cancel</Button>
-          <Button confirm onClick={save}>Save</Button>
+          <Button confirm onClick={validate}>Save</Button>
         </section>
       </section>
     </main>
