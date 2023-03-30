@@ -23,4 +23,6 @@ To set up the project locally, follow these steps:
 
 ## Screenshots
 
+![Scheduler main page](https://github.com/BlaireAramenko/scheduler/blob/master/images/scheduler-mainpage.png)
 
+![Delete message](https://github.com/BlaireAramenko/scheduler/blob/master/images/delete-message.png)
