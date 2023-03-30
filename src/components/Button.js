@@ -1,11 +1,3 @@
-/* import React from "react";
-
-import "components/Button.scss";
-
-export default function Button(props) {
-   return <></>;
-} */
-
 import React from "react";
 import "components/Button.scss";
 import classNames from "classnames";

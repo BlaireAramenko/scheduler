@@ -18,13 +18,7 @@ export default function Form(props) {
     reset();
     props.onCancel();
   };
-  //saves form values when user clicks save button
- /* const save = () => {
-    if (student && interviewer && props.onSave) {
-      props.onSave(student, interviewer);
-      reset();
-    }
-  }; */
+
 
   function validate() {
     if (student === "") {

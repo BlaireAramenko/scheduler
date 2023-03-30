@@ -28,15 +28,7 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
-  //this function saves interview data, updates mode state and transitions to SHOW or back to CREATE mode
-  /* const save = (student, interviewer) => {
-     props.onSave(student, interviewer);
-     if (props.interview) {
-     transition(SHOW);
-   } else {
-     back();
-   }
- } */
+ 
   function save(name, interviewer) {
     const interview = {
       student: name,
