@@ -1,6 +1,7 @@
 import React from "react";
-import { render, cleanup, waitForElement, fireEvent, prettyDOM, getByText, getAllByTestId, getByPlaceholderText, getByAltText } from "@testing-library/react";
+import { render, cleanup, waitForElement, fireEvent, prettyDOM, getByText, getAllByTestId, getByPlaceholderText, getByAltText, queryByText } from "@testing-library/react";
 import Application from "components/Application";
+import { debug } from "util";
 
 afterEach(cleanup);
 
@@ -16,7 +17,8 @@ it("changes the schedule when a new day is selected", async () => {
 });
 
 it("loads data, books an interview and reduces the spots remaining for Monday by 1", async () => {
-  const { container } = render(<Application />);
+  const { container, debug } = render(<Application />);
+  console.log(debug);
 
   await waitForElement(() => getByText(container, "Archie Cohen"));
 
@@ -32,7 +34,15 @@ it("loads data, books an interview and reduces the spots remaining for Monday by
 
   fireEvent.click(getByText(appointment, "Save"));
 
-  console.log(prettyDOM(appointment));
+  expect(getByText(appointment, "Saving")).toBeInTheDocument();
+
+  await waitForElement(() => getByText(appointment, "Lydia Miller-Jones"));
+
+  const day = getAllByTestId(container, "day").find(day =>
+    queryByText(day, "Monday")
+  );
+
+  expect(getByText(day, "no spots remaining")).toBeInTheDocument();
 });
 
 });
