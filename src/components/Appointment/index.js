@@ -49,9 +49,6 @@ export default function Appointment(props) {
     .catch(error => transition(ERROR_SAVE, true));
   }
 
- /* const confirmDelete = () => {
-    transition(CONFIRM)
-  }; */
 
   function destroy(event) {
     transition(DELETING, true);
